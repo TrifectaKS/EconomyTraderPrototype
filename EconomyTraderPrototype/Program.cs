@@ -1,6 +1,10 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using EconomyTraderPrototype;
-using EconomyTraderPrototype.Market;
+using EconomyTraderPrototype.Factories;
+using EconomyTraderPrototype.MarketAgents;
+using EconomyTraderPrototype.MarketAgents.AgentGoods;
+using EconomyTraderPrototype.MarketAgents.Interfaces;
+using EconomyTraderPrototype.Markets;
 
 Console.WriteLine("Market Simulator");
 
@@ -8,24 +12,51 @@ string? input = "";
 
 Randomizer.SetSeed(123);
 
-var goods = new List<MarketGood>()
+var goods = new Dictionary<string, MarketGood>()
 {
-    new("Apple", 10),
-    //new("Banana", 20),
-    //new("Meat", 100),
+    { "Coal", MarketGoodFactory.CreateMarketGood("Coal", 100, 1000, 750) },
+    { "Meat", MarketGoodFactory.CreateMarketGood("Meat", 75, 400, 450) },
 };
 
-goods[0].AddSupply(20);
-goods[0].AddDemand(10);
 
-//goods[1].AddSupply(50);
-//goods[1].AddDemand(100);
+var marketAgents = new Dictionary<string, BaseMarketAgent>() {
+    { "Farmer 1", MarketAgentFactory.CreateAgent<Farmer>(5,
+        new List<IAgentGood> ()
+        {
+            AgentGoodFactory.CreateAgentGood<AgentConsumptionGood>(goods["Meat"], 100, 1, 5),
+            AgentGoodFactory.CreateAgentGood<AgentConsumptionGood>(goods["Coal"], 100, 100, 200),
+        },
+        new List<IAgentGood> ()
+        {
+            AgentGoodFactory.CreateAgentGood<AgentProductionGood>(goods["Meat"], 100, 50, 100) ,
+        })
+    },
 
-//goods[2].AddSupply(100);
-//goods[2].AddDemand(100);
+    { "Farmer 2", MarketAgentFactory.CreateAgent<Farmer>(5,
+        new List<IAgentGood> ()
+        {
+            AgentGoodFactory.CreateAgentGood<AgentConsumptionGood>(goods["Meat"], 100, 5, 7),
+            AgentGoodFactory.CreateAgentGood<AgentConsumptionGood>(goods["Coal"], 55, 20, 75),
+        },
+        new List<IAgentGood> ()
+        {
+            AgentGoodFactory.CreateAgentGood<AgentProductionGood>(goods["Meat"], 75, 50, 100),
+        })
+    },
 
+    { "Socialite", MarketAgentFactory.CreateAgent<Farmer>(5,
+        new List<IAgentGood> ()
+        {
 
-Market market = new Market("Market 1", goods);
+        },
+        new List<IAgentGood> ()
+        {
+            AgentGoodFactory.CreateAgentGood<AgentProductionGood>(goods["Meat"], 100, 100, 200),
+        })
+    },
+};
+
+Market market = new Market("Market 1", goods, marketAgents);
 
 do
 {
@@ -33,14 +64,14 @@ do
 
     switch (input)
     {
-        case "t": 
+        case "t":
             market.TickMarket();
-            market.DebugLog(); 
+            market.DebugLog();
             break;
         case "d":
-            goods[0].AddDemand(5); break;
+            goods["Meat"].AddDemand(10); break;
         case "s":
-            goods[0].AddSupply(5); break;
+            goods["Meat"].AddSupply(10); break;
         default: break;
     }
 

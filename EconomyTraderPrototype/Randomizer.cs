@@ -1,8 +1,12 @@
-﻿namespace EconomyTraderPrototype
+﻿using System.Runtime.CompilerServices;
+
+namespace EconomyTraderPrototype
 {
     public static class Randomizer
     {
         private static Random random = new Random();
+
+        private static Random Random => random;
 
         public static void SetSeed(int seed)
         {
@@ -16,7 +20,7 @@
         /// <param name="max">Inclusive Maximum</param>
         public static int GetNumber(int min, int max)
         {
-            return random.Next(min, max+1);
+            return random.Next(min, max);
         }
 
         /// <summary>

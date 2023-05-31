@@ -1,6 +1,6 @@
 ﻿using EconomyTraderPrototype.Enums;
 
-namespace EconomyTraderPrototype.Market.History
+namespace EconomyTraderPrototype.Markets.History
 {
     public class TransationEntry
     {

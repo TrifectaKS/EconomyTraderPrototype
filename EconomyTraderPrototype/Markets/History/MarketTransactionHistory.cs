@@ -1,10 +1,10 @@
-﻿namespace EconomyTraderPrototype.Market.History
+﻿namespace EconomyTraderPrototype.Markets.History
 {
     public class MarketTransactionHistory
     {
         public IList<TransationEntry> Transactions { get; private set; } = new List<TransationEntry>();
 
-        public void AddTransaction(Order order)
+        public void AddTransaction(MarketOrder order)
         {
             Transactions.Add(new TransationEntry(DateTime.Now, order.OrderType, order.Good, order.Units, order.PricePerUnit));
         }

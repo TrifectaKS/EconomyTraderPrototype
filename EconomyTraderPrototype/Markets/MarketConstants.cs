@@ -1,4 +1,4 @@
-﻿namespace EconomyTraderPrototype.Market
+﻿namespace EconomyTraderPrototype.Markets
 {
     public class MarketConstants
     {

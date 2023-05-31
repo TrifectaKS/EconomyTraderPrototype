@@ -1,15 +1,18 @@
 ﻿using EconomyTraderPrototype.Enums;
+using EconomyTraderPrototype.Markets.Interfaces;
 
-namespace EconomyTraderPrototype.Market
+namespace EconomyTraderPrototype.Markets
 {
-    public class Order
+    public class MarketOrder : IMarketEvent
     {
         public OrderType OrderType { get; private set; }
         public MarketGood Good { get; private set; }
         public int Units { get; private set; }
         public double PricePerUnit { get; private set; }
 
-        public Order(OrderType type, MarketGood good, int units, double pricePerUnit) 
+        //TODO Agent executing the order
+
+        public MarketOrder(OrderType type, MarketGood good, int units, double pricePerUnit) 
         {
             OrderType = type;
             Good = good;
@@ -20,8 +23,7 @@ namespace EconomyTraderPrototype.Market
         public void OnComplete()
         {
             //TODO: Do something on order complete
-            //Add to inventory,
-            //Decrease player currency etc.
+            //Raise event for order complete
         }
     }
 }

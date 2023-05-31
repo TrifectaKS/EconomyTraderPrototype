@@ -1,4 +1,4 @@
-﻿namespace EconomyTraderPrototype.Market
+﻿namespace EconomyTraderPrototype.Markets
 {
     public class MarketGood
     {
@@ -10,13 +10,10 @@
         public double Price { get; private set; }
         public int Supply { get; private set; } = 0;
         public int Demand { get; private set; } = 0;
+        public IList<double> PriceHistory { get; private set; } = new List<double>();
 
         private int Balance => Supply - Demand;
-
         private double _targetPrice;
-
-
-        public IList<double> PriceHistory { get; private set; } = new List<double>();
 
         public MarketGood(string name, double basePrice)
         {
@@ -27,6 +24,9 @@
             Price = basePrice;
             BasePrice = basePrice;
             _targetPrice = basePrice;
+
+            updateTargetPrice();
+            setPriceToTarget();
         }
 
         public void AddSupply(int supply)
@@ -46,9 +46,9 @@
             if (Price == _targetPrice)
                 return;
 
-            Price = MarketHelpers.InterpolateDouble(MarketConstants.PriceInterpolation, Price, _targetPrice);
+            Price = Helpers.InterpolateDouble(MarketConstants.PriceInterpolation, Price, _targetPrice);
 
-            if(Math.Abs(_targetPrice - Price) <= MarketConstants.PriceSnap)
+            if (Math.Abs(_targetPrice - Price) <= MarketConstants.PriceSnap)
             {
                 Price = _targetPrice;
             }
@@ -71,9 +71,8 @@
             if (balance > 0)
             {
                 modifier = calculateModifier(balance, Supply);
-                
             }
-            else if(balance < 0)
+            else if (balance < 0)
             {
                 modifier = calculateModifier(balance, Demand);
             }
@@ -83,7 +82,7 @@
 
         public void DebugLog()
         {
-            Console.WriteLine($"MarketGood: {Name} @ ${Price} per unit");
+            Console.WriteLine($"MarketGood: {Name} @ ${Price} per unit. Supply: {Supply} - Demand: {Demand}");
         }
     }
 }
